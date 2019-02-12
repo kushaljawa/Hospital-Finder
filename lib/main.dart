@@ -219,6 +219,7 @@ class _MyHomePageState extends State<MyHomePage>
                                       //     .then((FirebaseUser user) =>
                                       //         print(user))
                                       //     .catchError((e) => print(e));
+                                      print("Ehllo");
                                     },
                                     child: Material(
                                       shadowColor: Colors.transparent,
