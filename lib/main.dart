@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-// import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-// import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 import 'signup.dart';
 import 'dashboard.dart';
@@ -50,20 +50,23 @@ class _MyHomePageState extends State<MyHomePage>
         parent: animationController));
   }
 
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
-  // final GoogleSignIn googleSignIn = new GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  // Future<FirebaseUser> _signIn() async {
-  //   GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
-  //   GoogleSignInAuthentication gSA = await googleSignInAccount.authentication;
+  Future<FirebaseUser> _signIn() async {
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
 
-  //   FirebaseUser user = await _auth.signInWithGoogle(
-  //       accessToken: gSA.accessToken, idToken: gSA.idToken);
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
 
-  //   print("User name : " + user.displayName);
-
-  //   return user;
-  // }
+    final FirebaseUser user = await _auth.signInWithCredential(credential);
+    print("signed in " + user.displayName);
+    return user;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -215,10 +218,10 @@ class _MyHomePageState extends State<MyHomePage>
                                   height: 55.0,
                                   child: GestureDetector(
                                     onTap: () {
-                                      // _signIn()
-                                      //     .then((FirebaseUser user) =>
-                                      //         print(user))
-                                      //     .catchError((e) => print(e));
+                                      _signIn()
+                                          .then((FirebaseUser user) =>
+                                              print(user))
+                                          .catchError((e) => print(e));
                                       print("Clicked");
                                     },
                                     child: Material(
